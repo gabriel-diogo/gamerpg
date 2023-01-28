@@ -11,7 +11,20 @@ public class e : MonoBehaviour
     public float grado;
     public Quaternion angulo;
     public GameObject target;
-    public bool ataca;
+
+    static public bool ataca;
+
+   public float distancia=10f,distanciafuga=4f;
+
+
+   public float alerta=8f;
+public LayerMask player;
+bool estaalerta;
+ Transform jogador;
+
+public float vel=2;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +32,7 @@ public class e : MonoBehaviour
         target=GameObject.Find("gd");
     }
 public void coportamento(){
-if(Vector3.Distance(transform.position,target.transform.position)>5){
+if(Vector3.Distance(transform.position,target.transform.position)>distancia){
 
 ani.SetBool("run",false);
     cronometro+=1*Time.deltaTime;
@@ -43,7 +56,7 @@ ani.SetBool("run",false);
     break;
     }
 }else{
-    if(Vector3.Distance(transform.position,target.transform.position)>1&&!ataca){
+    if(Vector3.Distance(transform.position,target.transform.position)>distanciafuga&&!ataca){
     var lookpos=target.transform.position-transform.position;
     lookpos.y=0;
     var rotation =Quaternion.LookRotation(lookpos);
@@ -54,18 +67,32 @@ ani.SetBool("run",false);
    
    ani.SetBool("ata",false);
    
+   
    }
     else{
 ani.SetBool("run",false);
 ani.SetBool("walk",false);
 ataca=true;
 ani.SetBool("ata",true);
-if(Vector3.Distance(transform.position,target.transform.position)>2&&ataca){
+
+if(recebedano.ataque>0){
+//transform.position=Vector3.MoveTowards(transform.position,new Vector3(transform.position.x,transform.position.y,transform.position.z),vel*Time.deltaTime);
+
+//alerta+=recebedano.ataque;
+
+Debug.Log(alerta);
+
+}
+if(Vector3.Distance(transform.position,target.transform.position)>distanciafuga&&ataca){
     final();
 }
     }
 }
 }
+
+
+
+
 public void final(){
     ani.SetBool("ata",false);
     ataca=false;
@@ -75,7 +102,22 @@ public void final(){
 
     // Update is called once per frame
     void Update()
+    {if(!recebedano.morte)coportamento();else ani.Play("morte");
+        
+    
+    estaalerta= Physics.CheckSphere(transform.position,alerta,player);
+    if(estaalerta==true){
+        //transform.LookAt(jogador);
+    
+    transform.LookAt(new Vector3(transform.position.x,transform.position.y,transform.position.z));
+    
+    
+    }
+    
+    }
+
+    void OnDrawGizmos()
     {
-        coportamento();
+        Gizmos.DrawWireSphere(transform.position,alerta);
     }
 }
