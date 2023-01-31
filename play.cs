@@ -1,7 +1,5 @@
 
 
-
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,7 +33,63 @@ public class PlayerController : MonoBehaviour
 
     Camera mainCam;
 
+    static public int qtdeenimigo;
 
+     float v;
+
+    public Transform[] enemigovisao=new Transform[qtdeenimigo];
+
+      
+
+     
+
+    public Transform[] enemigoalcace=new Transform[qtdeenimigo];
+    private int dano1;
+  
+    
+    private int danoarma;
+    private int hp;
+
+    public static bool core;
+
+    void OnTriggerEnter(Collider other)
+{
+    if(other.CompareTag("armainimigo"))
+    { 
+        //for (int i = 0; i <enemigoalcace.Length; i++){ v= Vector3.Distance(transform.position,enemigoalcace[i].transform.position);}
+        
+       if(other.gameObject.tag=="armainimigo"&e.ataca==true){
+            
+        dano1++;
+        Debug.Log("dano em vc"+dano1);
+
+       if(other.gameObject.tag=="armainimigo"&&recebedano. morte==false&&recebedano.atak==false&&core==true)
+       animator.Play("receberdano");
+        
+            //if(ani!=null){ani.Play(""); }
+                
+              
+           
+          hp-=danoarma;
+          
+          
+          
+          
+          }
+    
+    
+    
+    
+    
+    }
+
+
+    
+        
+       
+    
+    
+}
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -45,12 +99,25 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+       // enemigovisao.tag="enemigovisao";
+
+       // enimigo.Add(enemigovisao);
+
+
+        
 
         mainCam = Camera.main;
     }
 
+
+
     private void Update()
-    {
+    {for (int i = 0; i <enemigoalcace.Length; i++){ v= Vector3.Distance(transform.position,enemigoalcace[i].transform.position);}
+
+if (Input.GetKey(KeyCode.W|KeyCode.S|KeyCode.A|KeyCode.D)){core=true;}else{core=false;}
+    
+    
+    
 
 
         input.x = Input.GetAxis("Horizontal");
@@ -66,26 +133,58 @@ public class PlayerController : MonoBehaviour
 
         animator.SetFloat("Direction", 0);
 
-        if (Input.GetButtonDown("Jump"))
-        {
-            Jump(jumpHeight);
-        }
+        if (Input.GetButtonDown("Jump")) {Jump(jumpHeight);   }
+       
+            
+     
 
      
-      corre();
+      corre();   pulo(); if(v<=1) miraespada();
+
+      
+
+     
         
-     // pulo();
+   
+     
        
-       
+
+
+
+
+
 
 
     }
 
 
+
+void miraespada(){
+
+
+     if (Input.GetKey(KeyCode.Mouse0)|Input.GetKey(KeyCode.Mouse1))  {
+ for (int i = 0; i <enemigovisao.Length; i++)
+ {
+    
+ 
+transform.LookAt(new Vector3(enemigovisao[i].position.x,transform.position.y,enemigovisao[i].position.z));
+
+}}
+}
+
 void corre(){
- if(Input.GetKey(KeyCode.LeftShift))
-      {speed=4;animator.SetBool("core",true);}
-      else{speed=1;animator.SetBool("core",false);}
+
+
+
+if(Input.GetKey(KeyCode.Q)){animator.SetBool("rola", true);core=true;
+}else{ animator.SetBool("rola", false);core=false;}
+
+
+ if(Input.GetKey(KeyCode.LeftShift)&&Input.GetKey(KeyCode.W))
+ {speed=4;animator.SetBool("core",true);core=true;} 
+ else{speed=1;animator.SetBool("core",false);core=false;}
+      
+     
 
 
 }
@@ -93,7 +192,8 @@ void corre(){
 
 
     private void FixedUpdate()
-    {
+    {              
+
 
 
         if (isJumping)
@@ -104,7 +204,7 @@ void corre(){
             cc.Move(displacement);
             isJumping = !cc.isGrounded;
             rootMotion = Vector3.zero;
-            pulo();
+            //pulo();
         }
         else
         {
@@ -121,6 +221,7 @@ void corre(){
                 pulo();
                 
             }
+             
         }
 
         UpdateTargetDirection();
@@ -193,51 +294,5 @@ void corre(){
 
         //return ((transform.forward * input.y) + (transform.right * input.x)) * (airControl / 100);
         return targetDirection * (airControl / 100);
-    }
-}
-
-
-
-
-
-
-public class lutamao : MonoBehaviour
-{Animator a;
-    // Start is called before the first frame update
-    void Start()
-    {
-        a=GetComponent<Animator>();
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {muro();
-    chute();
-        
-        
-    }
-
-    void muro(){
-
-        if(Input.GetKey(KeyCode.X)){
-            a.SetFloat("muro",1f);
-            a.SetBool("at",true);
-        }else if(Input.GetKeyUp(KeyCode.X)){
-             a.SetFloat("muro",0f);
-             a.SetBool("at",false);
-        }
-
-
-    }
-
-   void chute(){
-        if(Input.GetKey(KeyCode.Z)){
-            a.SetFloat("chute",1f);
-            a.SetBool("at",true);
-        }else if(Input.GetKeyUp(KeyCode.Z)){
-             a.SetFloat("chute",0f);
-             a.SetBool("at",false);
-        }
     }
 }
